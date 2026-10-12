@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مقياس الحب الأسطوري ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Reem+Kufi:wght@700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #feada6 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* خلفية العناصر المتحركة */
+        .bg-element {
+            position: absolute;
+            animation: float 6s infinite linear;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) scale(0); opacity: 1; }
+            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 30px 20px;
+            text-align: center;
+            max-width: 450px;
+            width: 100%;
+            box-shadow: 0 20px 40px rgba(220, 38, 38, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            z-index: 10;
+        }
+
+        h1 {
+            color: #be123c;
+            font-family: 'Reem Kufi', sans-serif;
+            font-size: 1.6rem;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: #e11d48;
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        /* 1. الصورة فوق */
+        .image-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .love-result-img {
+            width: 180px;
+            height: 180px;
+            border-radius: 20px;
+            object-fit: cover;
+            border: 4px solid #f43f5e;
+            box-shadow: 0 8px 20px rgba(244, 63, 94, 0.3);
+            animation: popIn 0.3s ease;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.7); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* 2. المؤشر في المنتصف */
+        .slider-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        input[type=range] {
+            width: 100%;
+            accent-color: #e11d48;
+            height: 10px;
+            border-radius: 5px;
+            background: #ffd1d6;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .value-display {
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: #9f1239;
+        }
+
+        /* 3. الكلام والتعليق تحت */
+        .love-feedback {
+            font-size: 1.05rem;
+            color: #881337;
+            font-weight: bold;
+            min-height: 60px;
+            padding: 12px;
+            background: #fff1f2;
+            border-radius: 12px;
+            border: 1px dashed #f43f5e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.5;
+        }
+
+        /* نافذة احتفال الما لانهاية */
+        .party-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.5s;
+        }
+
+        .party-card {
+            background: white;
+            padding: 30px;
+            border-radius: 25px;
+            text-align: center;
+            max-width: 350px;
+            width: 90%;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            border: 3px solid #f43f5e;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="elements-container"></div>
+
+    <div class="card">
+        <h1>مقياس الحب الأسطوري 💕</h1>
+        <div class="subtitle">شوفي نسبتك كام وشوفي رد فعلنا ايه! 😂</div>
+        
+        <!-- 1. الصورة في الأعلى -->
+        <div class="image-container">
+            <img id="loveImg" class="love-result-img" src="" alt="Love Reaction">
+        </div>
+
+        <!-- 2. المؤشر في المنتصف -->
+        <div class="slider-container">
+            <label for="loveRange" style="font-size: 0.85rem; font-weight: bold; color: #881337;">اسحبي المؤشر (من 0 إلى ما لانهاية):</label>
+            <input type="range" id="loveRange" min="0" max="301" value="0">
+            <div class="value-display">النسبة: <span id="numberVal">0</span>%</div>
+        </div>
+
+        <!-- 3. الكلام والتعليق في الأسفل -->
+        <div class="love-feedback" id="loveFeedback">حركي المؤشر عشان تشوفي المفاجأة! 😉</div>
+    </div>
+
+    <!-- نافذة احتفال الما لانهاية -->
+    <div class="party-overlay" id="partyModal">
+        <div class="party-card">
+            <h2 style="color: #be123c; margin-bottom: 10px; font-family: 'Reem Kufi';">إنتي وصلتي للـ ∞! 🎉💍</h2>
+            <p style="color: #4c0519; font-size: 1rem; line-height: 1.6; margin-bottom: 15px; font-weight: bold;">
+                لا نهائي ديه النسبة، الكلام يلا بينا بقا! ❤️✨
+            </p>
+            <button onclick="closeParty()" style="background: #e11d48; color: white; border: none; padding: 10px 25px; border-radius: 20px; font-weight: bold; cursor: pointer;">يلا بينا للأبد 🥰</button>
+        </div>
+    </div>
+
+    <script>
+        // خلفية العناصر المتحركة (قلوب، بلالين، خواتم)
+        function createBgElement() {
+            const el = document.createElement('div');
+            el.classList.add('bg-element');
+            const symbols = ['❤️', '🎈', '💖', '💍', '✨', '🎉'];
+            el.innerHTML = symbols[Math.floor(Math.random() * symbols.length)];
+            el.style.left = Math.random() * 100 + 'vw';
+            el.style.animationDuration = Math.random() * 3 + 3 + 's';
+            el.style.fontSize = Math.random() * 20 + 15 + 'px';
+            document.getElementById('elements-container').appendChild(el);
+            setTimeout(() => el.remove(), 6000);
+        }
+        setInterval(createBgElement, 350);
+
+        const loveRange = document.getElementById('loveRange');
+        const numberVal = document.getElementById('numberVal');
+        const loveImg = document.getElementById('loveImg');
+        const loveFeedback = document.getElementById('loveFeedback');
+        const partyModal = document.getElementById('partyModal');
+
+        // قائمة أسماء ملفات الصور بالترتيب
+        const img0 = "download.jpg";                                       // 0%
+        const img25 = "The parent stare.jpg";                              // 1% - 25%
+        const img50 = "me.jpg";                                           // 26% - 50%
+        const img100 = "download (1).jpg";                                 // 51% - 100%
+        const img200 = "59 Darn Fine Random Pics to Entertain and Amuse.jpg"; // 101% - 200%
+        const img300 = "download (2).jpg";                                 // 201% - 300%
+        const imgInfinity = "download (3).jpg";                            // ما لا نهاية (∞)
+
+        function updateMeter(val) {
+            if (val === 0) {
+                numberVal.innerText = "0";
+                loveImg.src = img0;
+                loveFeedback.innerHTML = "صفر؟ مش لاعب";
+            } 
+            else if (val >= 1 && val <= 25) {
+                numberVal.innerText = val;
+                loveImg.src = img25;
+                loveFeedback.innerHTML = "والله يعني 25% بس؟";
+            } 
+            else if (val >= 26 && val <= 50) {
+                numberVal.innerText = val;
+                loveImg.src = img50;
+                loveFeedback.innerHTML = "50% شكلي هبدأ أراجع قرارات حياتي";
+            } 
+            else if (val >= 51 && val <= 100) {
+                numberVal.innerText = val;
+                loveImg.src = img100;
+                loveFeedback.innerHTML = "100% بس افتكرت حبنا أكتر من كده";
+            } 
+            else if (val >= 101 && val <= 200) {
+                numberVal.innerText = val;
+                loveImg.src = img200;
+                loveFeedback.innerHTML = "200% بدأنا نتحسن بس مستني أحسن";
+            } 
+            else if (val >= 201 && val <= 300) {
+                numberVal.innerText = val;
+                loveImg.src = img300;
+                loveFeedback.innerHTML = "300% أخيراً يابت فرحي قلبي كده";
+            } 
+            else {
+                // النسبة ما لا نهاية (عند سحب المؤشر لأخره)
+                numberVal.innerText = "∞ (ما لا نهاية)";
+                loveImg.src = imgInfinity;
+                loveFeedback.innerHTML = "لا نهائي ديه النسبة، الكلام يلا بينا بقا 💍✨❤️";
+                
+                partyModal.style.display = 'flex';
+                for(let i = 0; i < 30; i++) {
+                    setTimeout(createBgElement, i * 50);
+                }
+            }
+        }
+
+        // التهيئة عند فتح الصفحة
+        updateMeter(0);
+
+        loveRange.addEventListener('input', (e) => {
+            const val = parseInt(e.target.value);
+            updateMeter(val);
+        });
+
+        function closeParty() {
+            partyModal.style.display = 'none';
+        }
+    </script>
+</body>
+</html>
